@@ -12,7 +12,6 @@
 
 using namespace std;
 
-// Type definitions
 using number = double; 
 using Clock = chrono::high_resolution_clock;
 const number infinity = numeric_limits<number>::infinity(); 
@@ -25,7 +24,7 @@ long long num_nodes; // Number of nodes in the search tree
 struct node {
     int level; // Level of the node in the tree
     vector<int> path; // Path taken to reach this node
-    number bound; // Lower bound 
+    number bound; 
 };
 
 struct compareBound {
@@ -40,12 +39,12 @@ using priority_queue_node = priority_queue<node, vector<node>, compareBound>; //
 void initialize(priority_queue_node& pq) {
     while(!pq.empty()) 
     {
-        pq.pop(); // Clear the priority queue
+        pq.pop(); 
     }
 }
 
 bool empty(const priority_queue_node& pq) {
-    return pq.empty(); // Check if the priority queue is empty
+    return pq.empty(); 
 }
 
 void insert(priority_queue_node& pq, const node& v) {
@@ -57,7 +56,7 @@ void remove(priority_queue_node& pq, node& v) {
 }
 
 bool member(int i, const vector<int>& path) {
-    return find(path.begin(), path.end(), i) != path.end(); // Check if city i is already in the path
+    return find(path.begin(), path.end(), i) != path.end(); 
 }
 void cities(int temp, unsigned seed, number side = 1000.0) {
     n = temp; 
@@ -94,7 +93,6 @@ number length(const node& u)
 number bound(const node& v) {
     vector<char> on_path(n + 1, 0);
 
-    // Mark cities that are already in the path
     for (int x : v.path) {
         on_path[x] = 1;
     }
@@ -142,21 +140,21 @@ number bound(const node& v) {
 int not_visited(const vector<int>& path) {
     for (int i = 1; i <= n; ++i) {
         if (!member(i, path)) {
-            return i; // Return the first unvisited city
+            return i; 
         }
     }
-    return -1; // All cities are visited
+    return -1; 
 }
 
 void traveling_salesman(vector<int>& best_path, number& best_length) {
     priority_queue_node pq; // Priority queue to store nodes based on their bound
     node u, v; // Nodes for the search tree
-    num_nodes = 0; // Initialize the number of nodes explored
-    initialize(pq); // Clear the priority queue
-    v.level = 0; // Start at level 0
-    v.path = {1}; // Start from the first city
+    num_nodes = 0; 
+    initialize(pq); 
+    v.level = 0; 
+    v.path = {1}; 
     v.bound = bound(v); // Calculate the initial bound
-    best_length = infinity; // Initialize the best length to infinity
+    best_length = infinity; 
     insert(pq, v); // Insert the initial node into the priority queue
     while (!empty(pq)) {
         remove(pq, v); // Get the node with the smallest bound
@@ -164,28 +162,27 @@ void traveling_salesman(vector<int>& best_path, number& best_length) {
         { 
            continue;
         }
-        num_nodes++; // Increment the number of nodes explored
+        num_nodes++; 
         u.level = v.level + 1; // Move to the next level
 
             for (int i = 2; i <= n; ++i) 
             {
                 if (!member(i, v.path)) { // If city i is not in the current path
-                    u.path = v.path; // Copy the current path
+                    u.path = v.path; 
                     u.path.push_back(i); // Add city i to the path
-                    if (u.level == n - 2) { // If we are at the last level
+                    if (u.level == n - 2) { 
                         u.path.push_back(not_visited(u.path));
                         u.path.push_back(1); // Return to the starting city
                         number current_length = length(u); // Calculate the length of this path
-                        if (current_length < best_length) { // If this path is better than the best found
-                            best_length = current_length; // Update the best length
-                            best_path = u.path; // Update the best path
-                        }
+                        if (current_length < best_length) { // If this path is better than the best found update the best length
+                            best_length = current_length; 
+                            best_path = u.path; 
                     } 
                     else 
                     {
-                        u.bound = bound(u); // Calculate the bound for this node
+                        u.bound = bound(u); 
                         if (u.bound < best_length) { // If this node has a better bound than the best length found
-                            insert(pq, u); // Insert it into the priority queue for further exploration
+                            insert(pq, u); 
                         }
                     }
                 }
@@ -215,7 +212,7 @@ int main() {
     vector<int> best_path;
     number best_length;
 
-    // Single demonstration
+   
     cities(10, 100);
     matrix();
 
